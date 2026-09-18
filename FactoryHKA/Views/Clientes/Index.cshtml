@@ -1,0 +1,171 @@
+@model FactoryHKA.ViewModels.PaginacionViewModel<FactoryHKA.Models.Cliente>
+
+@{
+    ViewData["Title"] = "Clientes";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-0"><i class="bi bi-people-fill text-primary"></i> Clientes</h2>
+        <small class="text-muted">
+            Mostrando @Model.RegistroInicial–@Model.RegistroFinal de @Model.TotalRegistros clientes
+        </small>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Nuevo Cliente
+    </a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill"></i> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Correo electrónico</th>
+                        <th>Teléfono</th>
+                        <th>Dirección</th>
+                        <th class="text-center">Estado</th>
+                        <th>Fecha de creación</th>
+                        <th class="text-center" style="width: 160px;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Items.Any())
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center py-5 text-muted">
+                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                No hay clientes registrados.
+                            </td>
+                        </tr>
+                    }
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td><strong>@item.Nombre</strong></td>
+                            <td>@item.Apellido</td>
+                            <td>
+                                <i class="bi bi-envelope text-muted"></i>
+                                @item.Email
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.Telefono))
+                                {
+                                    <i class="bi bi-telephone text-muted"></i>
+                                    @item.Telefono
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </td>
+                            <td>@item.Direccion</td>
+                            <td class="text-center">
+                                @if (item.Activo)
+                                {
+                                    <span class="badge bg-success">Activo</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Inactivo</span>
+                                }
+                            </td>
+                            <td>@item.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm" role="group" aria-label="Acciones">
+                                    <a asp-action="Edit" asp-route-id="@item.Id"
+                                       class="btn btn-outline-warning"
+                                       data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@item.Id"
+                                       class="btn btn-outline-info"
+                                       data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalles">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id"
+                                       class="btn btn-outline-danger"
+                                       data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @if (Model.TotalPaginas > 1)
+    {
+        <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+            <small class="text-muted">
+                Página <strong>@Model.PaginaActual</strong> de <strong>@Model.TotalPaginas</strong>
+            </small>
+
+            <nav aria-label="Paginación">
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item @(Model.TienePaginaAnterior ? "" : "disabled")">
+                        <a class="page-link" asp-action="Index" asp-route-page="1" title="Primera">
+                            <i class="bi bi-chevron-double-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item @(Model.TienePaginaAnterior ? "" : "disabled")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-page="@(Model.PaginaActual - 1)">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
+
+                    @{
+                        int inicio = Math.Max(1, Model.PaginaActual - 2);
+                        int fin = Math.Min(Model.TotalPaginas, Model.PaginaActual + 2);
+                        for (int i = inicio; i <= fin; i++)
+                        {
+                            <li class="page-item @(i == Model.PaginaActual ? "active" : "")">
+                                <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+                            </li>
+                        }
+                    }
+
+                    <li class="page-item @(Model.TienePaginaSiguiente ? "" : "disabled")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-page="@(Model.PaginaActual + 1)">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                    <li class="page-item @(Model.TienePaginaSiguiente ? "" : "disabled")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-page="@Model.TotalPaginas"
+                           title="Última">
+                            <i class="bi bi-chevron-double-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // Activar tooltips de Bootstrap
+        document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            .forEach(el => new bootstrap.Tooltip(el));
+    </script>
+}

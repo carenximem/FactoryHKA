@@ -1,0 +1,171 @@
+@model FactoryHKA.Models.Cliente
+
+@{
+    ViewData["Title"] = "Nuevo Cliente";
+}
+
+<div class="container-fluid py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-action="Index" class="text-decoration-none">
+                    <i class="bi bi-people"></i> Clientes
+                </a>
+            </li>
+            <li class="breadcrumb-item active">Nuevo Cliente</li>
+        </ol>
+    </nav>
+
+    <!-- Encabezado -->
+    <div class="d-flex align-items-center mb-4">
+        <div class="bg-primary bg-gradient text-white rounded-3 p-3 me-3">
+            <i class="bi bi-person-plus-fill fs-3"></i>
+        </div>
+        <div>
+            <h2 class="mb-0 fw-bold">Nuevo Cliente</h2>
+            <small class="text-muted">Registra un nuevo cliente en el sistema</small>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-xl-7">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h6 class="mb-0 fw-semibold text-secondary">
+                        <i class="bi bi-info-circle"></i> Información del Cliente
+                    </h6>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="row">
+                            <!-- Nombre -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Nombre" class="form-label fw-semibold">
+                                    <i class="bi bi-person text-primary"></i> Nombre <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="Nombre" class="form-control form-control-lg"
+                                       placeholder="Ej: Juan" />
+                                <span asp-validation-for="Nombre" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Apellido -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Apellido" class="form-label fw-semibold">
+                                    <i class="bi bi-person text-primary"></i> Apellido <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="Apellido" class="form-control form-control-lg"
+                                       placeholder="Ej: Pérez" />
+                                <span asp-validation-for="Apellido" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label fw-semibold">
+                                <i class="bi bi-envelope text-primary"></i> Correo electrónico <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-at"></i>
+                                </span>
+                                <input asp-for="Email" type="email" class="form-control"
+                                       placeholder="ejemplo@correo.com" />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <!-- Teléfono -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Telefono" class="form-label fw-semibold">
+                                    <i class="bi bi-telephone text-primary"></i> Teléfono
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="bi bi-phone"></i>
+                                    </span>
+                                    <input asp-for="Telefono" class="form-control"
+                                           placeholder="3001234567" />
+                                </div>
+                                <span asp-validation-for="Telefono" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Dirección -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Direccion" class="form-label fw-semibold">
+                                    <i class="bi bi-geo-alt text-primary"></i> Dirección
+                                </label>
+                                <input asp-for="Direccion" class="form-control"
+                                       placeholder="Cra 10 #20-30, Bogotá" />
+                                <span asp-validation-for="Direccion" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Activo -->
+                        <div class="mb-4">
+                            <div class="form-check form-switch">
+                                <input asp-for="Activo" class="form-check-input" role="switch" checked />
+                                <label asp-for="Activo" class="form-check-label fw-semibold">
+                                    Cliente activo
+                                </label>
+                            </div>
+                            <small class="text-muted">
+                                Los clientes inactivos no podrán realizar compras.
+                            </small>
+                        </div>
+
+                        <hr />
+
+                        <!-- Acciones -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-check-circle"></i> Guardar Cliente
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel lateral informativo -->
+        <div class="col-lg-4 col-xl-5">
+            <div class="card border-0 shadow-sm bg-light">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-lightbulb text-warning"></i> Consejos
+                    </h6>
+                    <ul class="list-unstyled small text-muted mb-0">
+                        <li class="mb-2">
+                            <i class="bi bi-check2-circle text-success"></i>
+                            El correo debe ser único en el sistema.
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check2-circle text-success"></i>
+                            El teléfono es opcional pero recomendado.
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check2-circle text-success"></i>
+                            Los campos marcados con <span class="text-danger">*</span> son obligatorios.
+                        </li>
+                        <li>
+                            <i class="bi bi-check2-circle text-success"></i>
+                            Los clientes inactivos quedan fuera de las ventas.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+           
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

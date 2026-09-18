@@ -1,0 +1,219 @@
+@model FactoryHKA.Models.Producto
+
+@{
+    ViewData["Title"] = $"Producto - {Model.Nombre}";
+}
+
+<div class="container-fluid py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-action="Index" class="text-decoration-none">
+                    <i class="bi bi-box-seam"></i> Productos
+                </a>
+            </li>
+            <li class="breadcrumb-item active">@Model.Nombre</li>
+        </ol>
+    </nav>
+
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center">
+            <div class="bg-info bg-gradient text-white rounded-3 p-3 me-3">
+                <i class="bi bi-box-seam fs-3"></i>
+            </div>
+            <div>
+                <h2 class="mb-0 fw-bold">@Model.Nombre</h2>
+                <small class="text-muted">
+                    Ficha del producto <strong>#@Model.Id</strong>
+                </small>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                <i class="bi bi-pencil-square"></i> Editar
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Volver al listado
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Columna principal -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h6 class="mb-0 fw-semibold text-secondary">
+                        <i class="bi bi-info-circle"></i> Información del Producto
+                    </h6>
+                </div>
+                <div class="card-body p-4">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 text-muted">
+                            <i class="bi bi-tag"></i> Nombre
+                        </dt>
+                        <dd class="col-sm-8 fw-semibold fs-5">
+                            @Model.Nombre
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted">
+                            <i class="bi bi-card-text"></i> Descripción
+                        </dt>
+                        <dd class="col-sm-8">
+                            @if (!string.IsNullOrEmpty(Model.Descripcion))
+                            {
+                                @Model.Descripcion
+                            }
+                            else
+                            {
+                                <span class="text-muted">— Sin descripción —</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted">
+                            <i class="bi bi-currency-dollar"></i> Precio unitario
+                        </dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-success fs-6 px-3 py-2">
+                                @Model.Precio.ToString("C0", new System.Globalization.CultureInfo("es-CO"))
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted">
+                            <i class="bi bi-boxes"></i> Stock disponible
+                        </dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Stock == 0)
+                            {
+                                <span class="badge bg-danger fs-6 px-3 py-2">
+                                    <i class="bi bi-exclamation-triangle"></i> Agotado
+                                </span>
+                            }
+                            else if (Model.Stock < 5)
+                            {
+                                <span class="badge bg-warning text-dark fs-6 px-3 py-2">
+                                    <i class="bi bi-exclamation-circle"></i> Stock bajo: @Model.Stock unidades
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-info text-dark fs-6 px-3 py-2">
+                                    <i class="bi bi-box"></i> @Model.Stock unidades disponibles
+                                </span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted">
+                            <i class="bi bi-toggle-on"></i> Estado
+                        </dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Activo)
+                            {
+                                <span class="badge bg-success">
+                                    <i class="bi bi-check-circle"></i> Activo
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">
+                                    <i class="bi bi-x-circle"></i> Inactivo
+                                </span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+
+            <!-- Card de valor total del inventario -->
+            <div class="card border-0 shadow-sm mt-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="text-muted d-block">Valor total en inventario</small>
+                            <h4 class="mb-0 fw-bold text-primary">
+                                @((Model.Precio * Model.Stock).ToString("C0", new System.Globalization.CultureInfo("es-CO")))
+                            </h4>
+                            <small class="text-muted">
+                                @Model.Stock unidades × @Model.Precio.ToString("C0", new System.Globalization.CultureInfo("es-CO"))
+                            </small>
+                        </div>
+                        <i class="bi bi-calculator fs-1 text-primary opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel lateral -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body text-center py-4">
+                    <div class="bg-primary bg-gradient text-white rounded-3 d-inline-flex align-items-center justify-content-center mb-3"
+                         style="width: 100px; height: 100px;">
+                        <i class="bi bi-box-seam fs-1"></i>
+                    </div>
+                    <h5 class="fw-bold mb-1">@Model.Nombre</h5>
+                    <small class="text-muted d-block mb-3">ID: #@Model.Id</small>
+
+                    @if (Model.Activo)
+                    {
+                        <span class="badge bg-success px-3 py-2">
+                            <i class="bi bi-check-circle"></i> Producto Activo
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary px-3 py-2">
+                            <i class="bi bi-x-circle"></i> Producto Inactivo
+                        </span>
+                    }
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-graph-up text-primary"></i> Resumen
+                    </h6>
+                    <div class="row text-center">
+                        <div class="col-6 border-end">
+                            <div class="fs-3 fw-bold text-success">
+                                @Model.Precio.ToString("C0", new System.Globalization.CultureInfo("es-CO"))
+                            </div>
+                            <small class="text-muted">Precio</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="fs-3 fw-bold text-info">
+                                @Model.Stock
+                            </div>
+                            <small class="text-muted">En stock</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mt-3">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-lightning-charge text-warning"></i> Acciones rápidas
+                    </h6>
+                    <div class="d-grid gap-2">
+                        <a asp-controller="Facturas" asp-action="Create"
+                           class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-cart-plus"></i> Vender este producto
+                        </a>
+                        <a asp-action="Edit" asp-route-id="@Model.Id"
+                           class="btn btn-outline-warning btn-sm">
+                            <i class="bi bi-pencil-square"></i> Editar producto
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@Model.Id"
+                           class="btn btn-outline-danger btn-sm">
+                            <i class="bi bi-trash"></i> Eliminar producto
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

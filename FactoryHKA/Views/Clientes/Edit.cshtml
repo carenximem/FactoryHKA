@@ -1,0 +1,207 @@
+@model FactoryHKA.Models.Cliente
+
+@{
+    ViewData["Title"] = "Editar Cliente";
+}
+
+<div class="container-fluid py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-action="Index" class="text-decoration-none">
+                    <i class="bi bi-people"></i> Clientes
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-action="Details" asp-route-id="@Model.Id" class="text-decoration-none">
+                    @Model.Nombre @Model.Apellido
+                </a>
+            </li>
+            <li class="breadcrumb-item active">Editar</li>
+        </ol>
+    </nav>
+
+    <!-- Encabezado -->
+    <div class="d-flex align-items-center mb-4">
+        <div class="bg-warning bg-gradient text-white rounded-3 p-3 me-3">
+            <i class="bi bi-pencil-square fs-3"></i>
+        </div>
+        <div>
+            <h2 class="mb-0 fw-bold">Editar Cliente</h2>
+            <small class="text-muted">
+                Modificando el cliente <strong>#@Model.Id</strong> — creado el
+                @Model.FechaCreacion.ToString("dd/MM/yyyy")
+            </small>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-xl-7">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h6 class="mb-0 fw-semibold text-secondary">
+                        <i class="bi bi-info-circle"></i> Información del Cliente
+                    </h6>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="FechaCreacion" />
+
+                        <div class="row">
+                            <!-- Nombre -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Nombre" class="form-label fw-semibold">
+                                    <i class="bi bi-person text-primary"></i> Nombre <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="Nombre" class="form-control form-control-lg" />
+                                <span asp-validation-for="Nombre" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Apellido -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Apellido" class="form-label fw-semibold">
+                                    <i class="bi bi-person text-primary"></i> Apellido <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="Apellido" class="form-control form-control-lg" />
+                                <span asp-validation-for="Apellido" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label fw-semibold">
+                                <i class="bi bi-envelope text-primary"></i> Correo electrónico <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-at"></i>
+                                </span>
+                                <input asp-for="Email" type="email" class="form-control" />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <!-- Teléfono -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Telefono" class="form-label fw-semibold">
+                                    <i class="bi bi-telephone text-primary"></i> Teléfono
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="bi bi-phone"></i>
+                                    </span>
+                                    <input asp-for="Telefono" class="form-control" />
+                                </div>
+                                <span asp-validation-for="Telefono" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Dirección -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Direccion" class="form-label fw-semibold">
+                                    <i class="bi bi-geo-alt text-primary"></i> Dirección
+                                </label>
+                                <input asp-for="Direccion" class="form-control" />
+                                <span asp-validation-for="Direccion" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Activo -->
+                        <div class="mb-4">
+                            <div class="form-check form-switch">
+                                <input asp-for="Activo" class="form-check-input" role="switch" />
+                                <label asp-for="Activo" class="form-check-label fw-semibold">
+                                    Cliente activo
+                                </label>
+                            </div>
+                            <small class="text-muted">
+                                Los clientes inactivos no podrán realizar compras.
+                            </small>
+                        </div>
+
+                        <hr />
+
+                        <!-- Acciones -->
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Delete" asp-route-id="@Model.Id"
+                               class="btn btn-outline-danger">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </a>
+                            <div class="d-flex gap-2">
+                                <a asp-action="Index" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x-circle"></i> Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-warning px-4">
+                                    <i class="bi bi-save"></i> Guardar Cambios
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel lateral informativo -->
+        <div class="col-lg-4 col-xl-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="bg-primary bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                         style="width: 80px; height: 80px;">
+                        <span class="fs-2 fw-bold">
+                            @(Model.Nombre?.FirstOrDefault())@(Model.Apellido?.FirstOrDefault())
+                        </span>
+                    </div>
+                    <h5 class="fw-bold mb-1">@Model.Nombre @Model.Apellido</h5>
+                    <small class="text-muted d-block">@Model.Email</small>
+
+                    <div class="row mt-4 text-start">
+                        <div class="col-6">
+                            <small class="text-muted d-block">Cliente desde</small>
+                            <strong>@Model.FechaCreacion.ToString("MMM yyyy")</strong>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted d-block">Estado</small>
+                            @if (Model.Activo)
+                            {
+                                <span class="badge bg-success">Activo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Inactivo</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm bg-light mt-3">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-lightbulb text-warning"></i> Consejos
+                    </h6>
+                    <ul class="list-unstyled small text-muted mb-0">
+                        <li class="mb-2">
+                            <i class="bi bi-check2-circle text-success"></i>
+                            El correo debe seguir siendo único.
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check2-circle text-success"></i>
+                            Desactivar un cliente lo excluye de nuevas ventas.
+                        </li>
+                        <li>
+                            <i class="bi bi-exclamation-triangle text-warning"></i>
+                            No se puede eliminar si tiene facturas asociadas.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

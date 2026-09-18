@@ -1,0 +1,210 @@
+@model FactoryHKA.Models.Producto
+
+@{
+    ViewData["Title"] = "Editar Producto";
+}
+
+<div class="container-fluid py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-action="Index" class="text-decoration-none">
+                    <i class="bi bi-box-seam"></i> Productos
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-action="Details" asp-route-id="@Model.Id" class="text-decoration-none">
+                    @Model.Nombre
+                </a>
+            </li>
+            <li class="breadcrumb-item active">Editar</li>
+        </ol>
+    </nav>
+
+    <!-- Encabezado -->
+    <div class="d-flex align-items-center mb-4">
+        <div class="bg-warning bg-gradient text-white rounded-3 p-3 me-3">
+            <i class="bi bi-pencil-square fs-3"></i>
+        </div>
+        <div>
+            <h2 class="mb-0 fw-bold">Editar Producto</h2>
+            <small class="text-muted">
+                Modificando el producto <strong>#@Model.Id</strong>
+            </small>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-xl-7">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h6 class="mb-0 fw-semibold text-secondary">
+                        <i class="bi bi-info-circle"></i> Información del Producto
+                    </h6>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+
+                        <!-- Nombre -->
+                        <div class="mb-3">
+                            <label asp-for="Nombre" class="form-label fw-semibold">
+                                <i class="bi bi-tag text-primary"></i> Nombre <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Nombre" class="form-control form-control-lg" />
+                            <span asp-validation-for="Nombre" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Descripción -->
+                        <div class="mb-3">
+                            <label asp-for="Descripcion" class="form-label fw-semibold">
+                                <i class="bi bi-card-text text-primary"></i> Descripción
+                            </label>
+                            <textarea asp-for="Descripcion" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Descripcion" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <!-- Precio -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Precio" class="form-label fw-semibold">
+                                    <i class="bi bi-currency-dollar text-primary"></i> Precio <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">$</span>
+                                    <input asp-for="Precio" type="number" step="0.01" min="0"
+                                           class="form-control" />
+                                </div>
+                                <span asp-validation-for="Precio" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Stock -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Stock" class="form-label fw-semibold">
+                                    <i class="bi bi-boxes text-primary"></i> Stock <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="bi bi-hash"></i>
+                                    </span>
+                                    <input asp-for="Stock" type="number" min="0" class="form-control" />
+                                </div>
+                                <span asp-validation-for="Stock" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Activo -->
+                        <div class="mb-4">
+                            <div class="form-check form-switch">
+                                <input asp-for="Activo" class="form-check-input" role="switch" />
+                                <label asp-for="Activo" class="form-check-label fw-semibold">
+                                    Producto activo
+                                </label>
+                            </div>
+                            <small class="text-muted">
+                                Los productos inactivos no podrán ser vendidos.
+                            </small>
+                        </div>
+
+                        <hr />
+
+                        <!-- Acciones -->
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Delete" asp-route-id="@Model.Id"
+                               class="btn btn-outline-danger">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </a>
+                            <div class="d-flex gap-2">
+                                <a asp-action="Index" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x-circle"></i> Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-warning px-4">
+                                    <i class="bi bi-save"></i> Guardar Cambios
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel lateral informativo -->
+        <div class="col-lg-4 col-xl-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="bg-primary bg-gradient text-white rounded-3 d-inline-flex align-items-center justify-content-center mb-3"
+                         style="width: 80px; height: 80px;">
+                        <i class="bi bi-box-seam fs-1"></i>
+                    </div>
+                    <h5 class="fw-bold mb-1">@Model.Nombre</h5>
+                    <small class="text-muted d-block mb-3">
+                        ID: <strong>#@Model.Id</strong>
+                    </small>
+
+                    <div class="row text-start">
+                        <div class="col-6 mb-3">
+                            <small class="text-muted d-block">Precio actual</small>
+                            <strong class="text-success">
+                                @Model.Precio.ToString("C0", new System.Globalization.CultureInfo("es-CO"))
+                            </strong>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <small class="text-muted d-block">Stock disponible</small>
+                            @if (Model.Stock == 0)
+                            {
+                                <span class="badge bg-danger">Agotado</span>
+                            }
+                            else if (Model.Stock < 5)
+                            {
+                                <span class="badge bg-warning text-dark">@Model.Stock unidades</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-info text-dark">@Model.Stock unidades</span>
+                            }
+                        </div>
+                        <div class="col-12">
+                            <small class="text-muted d-block mb-1">Estado</small>
+                            @if (Model.Activo)
+                            {
+                                <span class="badge bg-success">Activo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Inactivo</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm bg-light mt-3">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-lightbulb text-warning"></i> Consejos
+                    </h6>
+                    <ul class="list-unstyled small text-muted mb-0">
+                        <li class="mb-2">
+                            <i class="bi bi-check2-circle text-success"></i>
+                            Cambiar el precio no afecta facturas ya generadas.
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check2-circle text-success"></i>
+                            El stock se descuenta automáticamente al facturar.
+                        </li>
+                        <li>
+                            <i class="bi bi-exclamation-triangle text-warning"></i>
+                            Desactivar oculta el producto de nuevas ventas.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

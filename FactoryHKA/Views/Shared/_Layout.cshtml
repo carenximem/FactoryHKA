@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FactoryHKA</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/FactoryHKA.styles.css" asp-append-version="true" />
+
+    <style>
+            html, body {
+                height: 100%;
+            }
+
+            body {
+                display: flex;
+                flex-direction: column;
+                background-color: #f8f9fa;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            main {
+                flex: 1 0 auto;
+            }
+
+            /* ============ NAVBAR ============ */
+            .navbar-brand {
+                font-weight: 700;
+                font-size: 1.4rem;
+                letter-spacing: -0.5px;
+                color: #0d6efd !important;
+            }
+
+            .navbar-brand i {
+                font-size: 1.6rem;
+                vertical-align: middle;
+                margin-right: 4px;
+            }
+
+            .navbar {
+                background: #ffffff !important;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+                padding: 0.75rem 0;
+            }
+
+            .navbar .nav-link {
+                font-weight: 500;
+                color: #495057 !important;
+                padding: 0.5rem 1rem !important;
+                border-radius: 0.5rem;
+                transition: all 0.2s ease;
+                margin: 0 2px;
+            }
+
+            .navbar .nav-link:hover {
+                background-color: #e7f1ff;
+                color: #0d6efd !important;
+            }
+
+            .navbar .nav-link.active {
+                background-color: #0d6efd;
+                color: #ffffff !important;
+            }
+
+            .navbar .nav-link i {
+                margin-right: 4px;
+            }
+
+            /* ============ FOOTER ============ */
+            footer {
+                background-color: #ffffff;
+                border-top: 1px solid #e9ecef;
+                padding: 1.25rem 0;
+                color: #6c757d;
+                font-size: 0.9rem;
+                flex-shrink: 0;
+            }
+
+            footer a {
+                color: #0d6efd;
+                text-decoration: none;
+            }
+
+            footer a:hover {
+                text-decoration: underline;
+            }
+
+            /* ============ AJUSTES GLOBALES ============ */
+            .btn {
+                border-radius: 0.5rem;
+                font-weight: 500;
+            }
+
+            .card {
+                border-radius: 0.75rem;
+            }
+
+            h1, h2, h3, h4, h5, h6 {
+                color: #212529;
+            }
+
+            .dropdown-menu {
+                border: none;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+                border-radius: 0.5rem;
+            }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand d-flex align-items-center" asp-controller="Clientes" asp-action="Index">
+                    <i class="bi bi-box-seam-fill"></i>
+                    FactoryHKA
+                </a>
+
+                <button class="navbar-toggler border-0" type="button"
+                        data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1 ms-lg-3">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Clientes" asp-action="Index">
+                                <i class="bi bi-people-fill"></i> Clientes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Productoes" asp-action="Index">
+                                <i class="bi bi-box-seam"></i> Productos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Facturas" asp-action="Index">
+                                <i class="bi bi-receipt"></i> Facturas
+                            </a>
+                        </li>
+                    </ul>
+
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="btn btn-primary px-3" asp-controller="Facturas" asp-action="Create">
+                                <i class="bi bi-cart-plus"></i> Nueva Venta
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid px-4">
+        <main role="main" class="py-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer>
+        <div class="container-fluid px-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center">
+                <div class="d-flex align-items-center mb-2 mb-md-0">
+                    <i class="bi bi-box-seam-fill text-primary me-2 fs-5"></i>
+                    <span>
+                        &copy; @DateTime.Now.Year <strong>FactoryHKA</strong> — Sistema de Ventas
+                    </span>
+                </div>
+                <div class="text-muted small">
+                    <i class="bi bi-code-slash"></i> Desarrollado con ASP.NET Core MVC &amp; Bootstrap 5
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

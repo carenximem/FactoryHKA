@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="FactoryHKA.Tests/FactoryHKA.Tests.csproj" />
+  <Project Path="FactoryHKA/FactoryHKA.csproj" />
+</Solution>

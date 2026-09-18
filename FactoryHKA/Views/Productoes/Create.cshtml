@@ -1,0 +1,157 @@
+@model FactoryHKA.Models.Producto
+
+@{
+    ViewData["Title"] = "Nuevo Producto";
+}
+
+<div class="container-fluid py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-action="Index" class="text-decoration-none">
+                    <i class="bi bi-box-seam"></i> Productos
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Nuevo Producto</li>
+        </ol>
+    </nav>
+
+    <!-- Encabezado -->
+    <div class="d-flex align-items-center mb-4">
+        <div class="bg-primary bg-gradient text-white rounded-3 p-3 me-3">
+            <i class="bi bi-plus-circle fs-3"></i>
+        </div>
+        <div>
+            <h2 class="mb-0 fw-bold">Nuevo Producto</h2>
+            <small class="text-muted">Registra un nuevo producto en el catálogo</small>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-xl-7">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h6 class="mb-0 fw-semibold text-secondary">
+                        <i class="bi bi-info-circle"></i> Información del Producto
+                    </h6>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <!-- Nombre -->
+                        <div class="mb-3">
+                            <label asp-for="Nombre" class="form-label fw-semibold">
+                                <i class="bi bi-tag text-primary"></i> Nombre <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Nombre" class="form-control form-control-lg"
+                                   placeholder="Ej: Laptop HP 15 pulgadas" />
+                            <span asp-validation-for="Nombre" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Descripción -->
+                        <div class="mb-3">
+                            <label asp-for="Descripcion" class="form-label fw-semibold">
+                                <i class="bi bi-card-text text-primary"></i> Descripción
+                            </label>
+                            <textarea asp-for="Descripcion" class="form-control" rows="3"
+                                      placeholder="Describe brevemente el producto..."></textarea>
+                            <span asp-validation-for="Descripcion" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <!-- Precio -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Precio" class="form-label fw-semibold">
+                                    <i class="bi bi-currency-dollar text-primary"></i> Precio <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">$</span>
+                                    <input asp-for="Precio" type="number" step="0.01" min="0"
+                                           class="form-control" placeholder="0.00" />
+                                </div>
+                                <span asp-validation-for="Precio" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Stock -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Stock" class="form-label fw-semibold">
+                                    <i class="bi bi-boxes text-primary"></i> Stock <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="bi bi-hash"></i>
+                                    </span>
+                                    <input asp-for="Stock" type="number" min="0"
+                                           class="form-control" placeholder="0" />
+                                </div>
+                                <span asp-validation-for="Stock" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Activo -->
+                        <div class="mb-4">
+                            <div class="form-check form-switch">
+                                <input asp-for="Activo" class="form-check-input" role="switch" checked />
+                                <label asp-for="Activo" class="form-check-label fw-semibold">
+                                    Producto activo
+                                </label>
+                            </div>
+                            <small class="text-muted">
+                                Los productos inactivos no podrán ser vendidos.
+                            </small>
+                        </div>
+
+                        <hr />
+
+                        <!-- Acciones -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-check-circle"></i> Guardar Producto
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel lateral informativo -->
+        <div class="col-lg-4 col-xl-5">
+            <div class="card border-0 shadow-sm bg-light">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-lightbulb text-warning"></i> Consejos
+                    </h6>
+                    <ul class="list-unstyled small text-muted mb-0">
+                        <li class="mb-2">
+                            <i class="bi bi-check2-circle text-success"></i>
+                            Usa nombres descriptivos para facilitar la búsqueda.
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check2-circle text-success"></i>
+                            El precio debe ser mayor a 0.
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check2-circle text-success"></i>
+                            El stock se descuenta automáticamente al facturar.
+                        </li>
+                        <li>
+                            <i class="bi bi-check2-circle text-success"></i>
+                            Los campos marcados con <span class="text-danger">*</span> son obligatorios.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+         
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

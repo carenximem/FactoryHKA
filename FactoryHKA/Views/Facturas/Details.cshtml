@@ -1,0 +1,228 @@
+﻿@model FactoryHKA.Models.Factura
+@{
+    ViewData["Title"] = $"Factura {Model.NumeroFactura}";
+}
+
+<div class="container-fluid py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-action="Index" class="text-decoration-none">
+                    <i class="bi bi-receipt"></i> Facturas
+                </a>
+            </li>
+            <li class="breadcrumb-item active">@Model.NumeroFactura</li>
+        </ol>
+    </nav>
+
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center">
+            <div class="bg-success bg-gradient text-white rounded-3 p-3 me-3">
+                <i class="bi bi-file-earmark-check fs-3"></i>
+            </div>
+            <div>
+                <h2 class="mb-0 fw-bold">Factura @Model.NumeroFactura</h2>
+                <small class="text-muted">
+                    <i class="bi bi-calendar-event"></i> @Model.Fecha.ToString("dddd, dd 'de' MMMM 'de' yyyy - HH:mm")
+                </small>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <button onclick="window.print()" class="btn btn-outline-secondary">
+                <i class="bi bi-printer"></i> Imprimir
+            </button>
+            <a asp-action="Index" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left"></i> Volver al listado
+            </a>
+        </div>
+    </div>
+
+    <!-- Tarjeta principal -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-5">
+
+            <!-- Cabecera tipo recibo -->
+            <div class="row mb-5">
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-box-seam-fill text-primary fs-2 me-2"></i>
+                        <div>
+                            <h4 class="mb-0 fw-bold">FactoryHKA</h4>
+                            <small class="text-muted">Sistema de Ventas</small>
+                        </div>
+                    </div>
+                    <div class="text-muted small">
+                        <div>NIT: 900.123.456-7</div>
+                        <div>Cra 10 #20-30, Bogotá</div>
+                        <div>contacto@factoryhka.com</div>
+                        <div>Tel: +57 (601) 123-4567</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 text-md-end">
+                    <div class="mb-2">
+                        <span class="text-muted small">FACTURA N°</span>
+                        <h3 class="fw-bold text-primary mb-0">@Model.NumeroFactura</h3>
+                    </div>
+                    <div class="mb-2">
+                        @switch (Model.Estado)
+                        {
+                            case FactoryHKA.Models.EstadoFactura.Pagada:
+                                <span class="badge bg-success fs-6 px-3 py-2">
+                                    <i class="bi bi-check-circle"></i> PAGADA
+                                </span>
+                                break;
+                            case FactoryHKA.Models.EstadoFactura.Pendiente:
+                                <span class="badge bg-warning text-dark fs-6 px-3 py-2">
+                                    <i class="bi bi-clock"></i> PENDIENTE
+                                </span>
+                                break;
+                            case FactoryHKA.Models.EstadoFactura.Anulada:
+                                <span class="badge bg-danger fs-6 px-3 py-2">
+                                    <i class="bi bi-x-circle"></i> ANULADA
+                                </span>
+                                break;
+                        }
+                    </div>
+                    <div class="text-muted small">
+                        <div>Fecha de emisión</div>
+                        <div class="fw-semibold text-dark">
+                            @Model.Fecha.ToString("dd/MM/yyyy HH:mm")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+
+            <!-- Datos del cliente -->
+            <div class="row mb-5">
+                <div class="col-md-6">
+                    <h6 class="text-uppercase text-muted small fw-bold mb-3">
+                        <i class="bi bi-person-badge"></i> Facturar a
+                    </h6>
+                    <div class="fw-bold fs-5">@Model.Cliente?.Nombre @Model.Cliente?.Apellido</div>
+                    <div class="text-muted">
+                        <div><i class="bi bi-envelope"></i> @Model.Cliente?.Email</div>
+                        @if (!string.IsNullOrEmpty(Model.Cliente?.Telefono))
+                        {
+                            <div><i class="bi bi-telephone"></i> @Model.Cliente?.Telefono</div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Cliente?.Direccion))
+                        {
+                            <div><i class="bi bi-geo-alt"></i> @Model.Cliente?.Direccion</div>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h6 class="text-uppercase text-muted small fw-bold mb-3">
+                        <i class="bi bi-credit-card"></i> Método de pago
+                    </h6>
+                    <div class="fw-semibold">Efectivo / Transferencia</div>
+                    <div class="text-muted small">Pago inmediato</div>
+                </div>
+            </div>
+
+            <!-- Tabla de detalle -->
+            <div class="table-responsive mb-4">
+                <table class="table align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width:50px;">#</th>
+                            <th>Descripción</th>
+                            <th class="text-center" style="width:100px;">Cantidad</th>
+                            <th class="text-end" style="width:150px;">Precio Unit.</th>
+                            <th class="text-end" style="width:150px;">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int i = 1;
+                        }
+                        @foreach (var d in Model.Detalles)
+                        {
+                            <tr>
+                                <td class="text-muted">@i</td>
+                                <td>
+                                    <div class="fw-semibold">@d.Producto?.Nombre</div>
+                                    @if (!string.IsNullOrEmpty(d.Producto?.Descripcion))
+                                    {
+                                        <small class="text-muted">@d.Producto.Descripcion</small>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-light text-dark border">@d.Cantidad</span>
+                                </td>
+                                <td class="text-end">
+                                    @d.PrecioUnitario.ToString("C0", new System.Globalization.CultureInfo("es-CO"))
+                                </td>
+                                <td class="text-end fw-semibold">
+                                    @d.Subtotal.ToString("C0", new System.Globalization.CultureInfo("es-CO"))
+                                </td>
+                            </tr>
+                            i++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Totales -->
+            <div class="row justify-content-end">
+                <div class="col-md-5 col-lg-4">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td class="text-muted">Subtotal</td>
+                            <td class="text-end">
+                                @Model.Subtotal.ToString("C0", new System.Globalization.CultureInfo("es-CO"))
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">IVA (19%)</td>
+                            <td class="text-end">
+                                @Model.Impuesto.ToString("C0", new System.Globalization.CultureInfo("es-CO"))
+                            </td>
+                        </tr>
+                        <tr class="border-top">
+                            <td class="fw-bold fs-5">TOTAL</td>
+                            <td class="text-end fw-bold fs-4 text-primary">
+                                @Model.Total.ToString("C0", new System.Globalization.CultureInfo("es-CO"))
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <hr class="mt-4" />
+
+            <!-- Pie del recibo -->
+            <div class="text-center text-muted small">
+                <p class="mb-1">
+                    <i class="bi bi-info-circle"></i>
+                    Gracias por su compra. Esta factura fue generada electrónicamente.
+                </p>
+                <p class="mb-0">
+                    <strong>FactoryHKA</strong> — Sistema de Ventas © @DateTime.Now.Year
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        @@media print {
+            .breadcrumb, .btn, nav, header, footer {
+                display: none !important;
+            }
+            .card {
+                box-shadow: none !important;
+                border: none !important;
+            }
+            body {
+                background: white !important;
+            }
+        }
+    </style>
+}

@@ -1,0 +1,171 @@
+@model FactoryHKA.Models.Producto
+
+@{
+    ViewData["Title"] = "Eliminar Producto";
+}
+
+<div class="container-fluid py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-action="Index" class="text-decoration-none">
+                    <i class="bi bi-box-seam"></i> Productos
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-action="Details" asp-route-id="@Model.Id" class="text-decoration-none">
+                    @Model.Nombre
+                </a>
+            </li>
+            <li class="breadcrumb-item active text-danger">Eliminar</li>
+        </ol>
+    </nav>
+
+    <!-- Encabezado -->
+    <div class="d-flex align-items-center mb-4">
+        <div class="bg-danger bg-gradient text-white rounded-3 p-3 me-3">
+            <i class="bi bi-exclamation-triangle-fill fs-3"></i>
+        </div>
+        <div>
+            <h2 class="mb-0 fw-bold text-danger">Eliminar Producto</h2>
+            <small class="text-muted">Esta acción no se puede deshacer</small>
+        </div>
+    </div>
+
+    <!-- Alerta de advertencia -->
+    <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+        <i class="bi bi-exclamation-octagon-fill fs-4 me-3"></i>
+        <div>
+            <strong>¿Estás seguro de eliminar este producto?</strong>
+            <div class="small">
+                Se eliminará permanentemente del catálogo y no se podrá recuperar.
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-xl-7">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h6 class="mb-0 fw-semibold text-secondary">
+                        <i class="bi bi-info-circle"></i> Información que será eliminada
+                    </h6>
+                </div>
+                <div class="card-body p-4">
+
+                    <!-- Ficha resumida -->
+                    <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+                        <div class="bg-danger bg-gradient text-white rounded-3 d-inline-flex align-items-center justify-content-center me-3"
+                             style="width: 70px; height: 70px;">
+                            <i class="bi bi-box-seam fs-2"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-0 fw-bold">@Model.Nombre</h5>
+                            <small class="text-muted">ID: #@Model.Id</small>
+                        </div>
+                    </div>
+
+                    <!-- Datos -->
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 text-muted">
+                            <i class="bi bi-card-text"></i> Descripción
+                        </dt>
+                        <dd class="col-sm-8">
+                            @if (!string.IsNullOrEmpty(Model.Descripcion))
+                            {
+                                @Model.Descripcion
+                            }
+                            else
+                            {
+                                <span class="text-muted">— Sin descripción —</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted">
+                            <i class="bi bi-currency-dollar"></i> Precio
+                        </dt>
+                        <dd class="col-sm-8 fw-semibold text-success">
+                            @Model.Precio.ToString("C0", new System.Globalization.CultureInfo("es-CO"))
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted">
+                            <i class="bi bi-boxes"></i> Stock actual
+                        </dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Stock == 0)
+                            {
+                                <span class="badge bg-danger">Agotado</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-info text-dark">@Model.Stock unidades</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted">
+                            <i class="bi bi-toggle-on"></i> Estado
+                        </dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Activo)
+                            {
+                                <span class="badge bg-success">Activo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Inactivo</span>
+                            }
+                        </dd>
+                    </dl>
+
+                    <hr class="my-4" />
+
+                    <!-- Confirmación y acciones -->
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox"
+                                   id="confirmDelete" required
+                                   onchange="document.getElementById('btnEliminar').disabled = !this.checked" />
+                            <label class="form-check-label fw-semibold" for="confirmDelete">
+                                Confirmo que deseo eliminar este producto permanentemente
+                            </label>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Cancelar
+                            </a>
+                            <button type="submit" id="btnEliminar"
+                                    class="btn btn-danger px-4" disabled>
+                                <i class="bi bi-trash"></i> Eliminar Definitivamente
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+            </div>
+
+            <div class="card border-0 shadow-sm mt-3">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-lightning-charge text-primary"></i> Alternativas
+                    </h6>
+                    <div class="d-grid gap-2">
+                        <a asp-action="Edit" asp-route-id="@Model.Id"
+                           class="btn btn-outline-warning btn-sm">
+                            <i class="bi bi-toggle-off"></i> Desactivar en su lugar
+                        </a>
+                        <a asp-action="Details" asp-route-id="@Model.Id"
+                           class="btn btn-outline-info btn-sm">
+                            <i class="bi bi-eye"></i> Ver ficha completa
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

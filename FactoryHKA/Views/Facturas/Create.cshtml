@@ -1,0 +1,246 @@
+﻿@model FactoryHKA.ViewModels.CrearFacturaViewModel
+@{
+    ViewData["Title"] = "Nueva Factura";
+}
+
+<div class="container-fluid py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-action="Index" class="text-decoration-none">
+                    <i class="bi bi-receipt"></i> Facturas
+                </a>
+            </li>
+            <li class="breadcrumb-item active">Nueva Factura</li>
+        </ol>
+    </nav>
+
+    <!-- Encabezado -->
+    <div class="d-flex align-items-center mb-4">
+        <div class="bg-primary bg-gradient text-white rounded-3 p-3 me-3">
+            <i class="bi bi-receipt-cutoff fs-3"></i>
+        </div>
+        <div>
+            <h2 class="mb-0 fw-bold">Nueva Factura</h2>
+            <small class="text-muted">Selecciona el cliente y agrega los productos a vender</small>
+        </div>
+    </div>
+
+    <form asp-action="Create" method="post" id="formFactura" novalidate>
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+        <div class="row g-4">
+            <!-- Columna izquierda: cliente + productos -->
+            <div class="col-lg-8">
+
+                <!-- CLIENTE -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white border-bottom py-3">
+                        <h6 class="mb-0 fw-semibold text-secondary">
+                            <i class="bi bi-person-badge text-primary"></i> Datos del Cliente
+                        </h6>
+                    </div>
+                    <div class="card-body p-4">
+                        <label asp-for="ClienteId" class="form-label fw-semibold">
+                            Cliente <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="ClienteId" class="form-select form-select-lg" asp-items="Model.Clientes">
+                            <option value="">— Seleccione un cliente —</option>
+                        </select>
+                        <span asp-validation-for="ClienteId" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <!-- PRODUCTOS -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white border-bottom py-3">
+                        <h6 class="mb-0 fw-semibold text-secondary">
+                            <i class="bi bi-box-seam text-primary"></i> Agregar Productos
+                        </h6>
+                    </div>
+                    <div class="card-body p-4">
+
+                        <!-- Fila de agregar -->
+                        <div class="row g-2 align-items-end mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Producto</label>
+                                <select id="selectProducto" class="form-select">
+                                    <option value="">— Seleccione producto —</option>
+                                    @foreach (var p in Model.Productos)
+                                    {
+                                        <option value="@p.Id" data-precio="@p.Precio" data-stock="@p.Stock">
+                                            @p.Nombre — @p.Precio.ToString("C0", new System.Globalization.CultureInfo("es-CO")) (Stock: @p.Stock)
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold small">Cantidad</label>
+                                <input type="number" id="inputCantidad" class="form-control"
+                                       min="1" value="1" />
+                            </div>
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-success w-100"
+                                        onclick="agregarProducto()">
+                                    <i class="bi bi-plus-lg"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Tabla detalle -->
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0" id="tablaDetalle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th class="text-center" style="width:100px;">Cantidad</th>
+                                        <th class="text-end" style="width:150px;">Precio</th>
+                                        <th class="text-end" style="width:150px;">Subtotal</th>
+                                        <th style="width:60px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyDetalle">
+                                    <tr id="filaVacia">
+                                        <td colspan="5" class="text-center text-muted py-4">
+                                            <i class="bi bi-cart fs-3 d-block mb-2"></i>
+                                            No has agregado productos aún.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Columna derecha: resumen -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+                    <div class="card-header bg-dark text-white py-3">
+                        <h6 class="mb-0 fw-semibold">
+                            <i class="bi bi-calculator"></i> Resumen de Factura
+                        </h6>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-muted">Subtotal</span>
+                            <strong id="lblSubtotal">$ 0</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-muted">IVA (19%)</span>
+                            <strong id="lblIva">$ 0</strong>
+                        </div>
+                        <hr />
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <span class="fw-bold fs-5">TOTAL</span>
+                            <span class="fw-bold fs-4 text-primary" id="lblTotal">$ 0</span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-circle"></i> Generar Factura
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-light text-center small text-muted">
+                        <i class="bi bi-info-circle"></i>
+                        El stock se descuenta automáticamente.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const items = [];
+
+        function agregarProducto() {
+            const select = document.getElementById('selectProducto');
+            const cantidad = parseInt(document.getElementById('inputCantidad').value);
+
+            if (!select.value) return alert('Seleccione un producto');
+            if (cantidad <= 0) return alert('Cantidad inválida');
+
+            const opt = select.options[select.selectedIndex];
+            const stock = parseInt(opt.dataset.stock);
+            const precio = parseFloat(opt.dataset.precio);
+            const id = parseInt(select.value);
+            const nombre = opt.text.split(' — ')[0];
+
+            if (cantidad > stock) return alert(`Stock insuficiente. Disponible: ${stock}`);
+
+            const existe = items.find(i => i.productoId === id);
+            if (existe) {
+                if (existe.cantidad + cantidad > stock)
+                    return alert('Stock insuficiente');
+                existe.cantidad += cantidad;
+            } else {
+                items.push({ productoId: id, nombre, precio, cantidad, stock });
+            }
+            render();
+            document.getElementById('inputCantidad').value = 1;
+            select.value = '';
+        }
+
+        function eliminar(index) {
+            items.splice(index, 1);
+            render();
+        }
+
+        function fmt(n) {
+            return '$ ' + n.toLocaleString('es-CO', { maximumFractionDigits: 0 });
+        }
+
+        function render() {
+            const tbody = document.getElementById('tbodyDetalle');
+            tbody.innerHTML = '';
+
+            if (items.length === 0) {
+                tbody.innerHTML = `
+                    <tr id="filaVacia">
+                        <td colspan="5" class="text-center text-muted py-4">
+                            <i class="bi bi-cart fs-3 d-block mb-2"></i>
+                            No has agregado productos aún.
+                        </td>
+                    </tr>`;
+            }
+
+            let subtotal = 0;
+
+            items.forEach((it, i) => {
+                const sub = it.precio * it.cantidad;
+                subtotal += sub;
+                tbody.innerHTML += `
+                    <tr>
+                        <td>
+                            <strong>${it.nombre}</strong>
+                            <input type="hidden" name="Items[${i}].ProductoId" value="${it.productoId}" />
+                            <input type="hidden" name="Items[${i}].Cantidad" value="${it.cantidad}" />
+                        </td>
+                        <td class="text-center">${it.cantidad}</td>
+                        <td class="text-end">${fmt(it.precio)}</td>
+                        <td class="text-end"><strong>${fmt(sub)}</strong></td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-sm btn-outline-danger"
+                                    onclick="eliminar(${i})" title="Quitar">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+            });
+
+            const iva = subtotal * 0.19;
+            document.getElementById('lblSubtotal').textContent = fmt(subtotal);
+            document.getElementById('lblIva').textContent = fmt(iva);
+            document.getElementById('lblTotal').textContent = fmt(subtotal + iva);
+        }
+    </script>
+}

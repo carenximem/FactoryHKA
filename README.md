@@ -52,5 +52,5 @@ Antes de ejecutar el proyecto, asegúrate de tener instalado:
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/TU-USUARIO/FactoryHKA.git
+git clone https://github.com/carenximem/FactoryHKA.git
 cd FactoryHKA
